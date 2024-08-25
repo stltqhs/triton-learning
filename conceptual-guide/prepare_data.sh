@@ -35,6 +35,11 @@ if [ ! -f str.onnx ] ; then
     "cd /workspace/data && python /workspace/conceptual-guide/utils/pth2onnx.py --input None-ResNet-None-CTC.pth --output str.onnx"
 fi
 
+if [ ! -f batch_str.onnx ] ; then
+    sudo docker run --rm --gpus all -v ${WORKSPACE}:/workspace nvcr.io/nvidia/pytorch:24.07-py3 /bin/bash -c \
+    "cd /workspace/data && python /workspace/conceptual-guide/utils/pth2onnx.py --input None-ResNet-None-CTC.pth --output batch_str.onnx --batch"
+fi
+
 if [ ! -f detection.onnx ] ; then
     echo "Failed without detection.onnx model file"
     exit 1
@@ -42,6 +47,11 @@ fi
 
 if [ ! -f str.onnx ] ; then
     echo "Failed without str.onnx model file"
+    exit 1
+fi
+
+if [ ! -f batch_str.onnx ] ; then
+    echo "Failed without batch_str.onnx model file"
     exit 1
 fi
 

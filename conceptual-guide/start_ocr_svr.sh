@@ -11,6 +11,10 @@ parent_dir="${current_dir%/*}"
 WORKSPACE="$parent_dir"
 echo "workspace is ${WORKSPACE}"
 
+if [ -d $WORKSPACE/data/model_repository ] ; then
+ sudo rm -rf $WORKSPACE/data/model_repository
+fi
+
 mkdir -p $WORKSPACE/data/model_repository/text_detection/1
 cp $WORKSPACE/data/detection.onnx $WORKSPACE/data/model_repository/text_detection/1/model.onnx
 
@@ -68,9 +72,6 @@ if [ ! -f ${WORKSPACE}/data/img1.jpg ] ; then
 cd $WORKSPACE/data
 wget 'https://raw.githubusercontent.com/triton-inference-server/tutorials/main/Conceptual_Guide/Part_1-model_deployment/img1.jpg'
 fi
-
-# Replace the yy.mm in the image name with the release year and month
-# of the Triton version needed, eg. 22.08
 
 sudo docker run --gpus=all -it --shm-size=256m --rm -p8000:8000 -p8001:8001 -p8002:8002 -v ${WORKSPACE}/data/model_repository:/models nvcr.io/nvidia/tritonserver:24.07-py3 \
 tritonserver --model-repository=/models
